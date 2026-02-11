@@ -34,7 +34,7 @@ h3 {
 #inputs {
     display: flex;
     gap: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 input.bit {
@@ -70,7 +70,7 @@ button:hover {
 }
 
 #result {
-    margin-top: 25px;
+    margin-top: 1px;
     font-size: 26px;
     font-weight: bold;
     letter-spacing: 1px;
@@ -111,6 +111,31 @@ button {
     display: none;
 }
 
+
+.button1 {
+    padding: 15px 20px;
+    background: #16a34a;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    margin: 20px auto;
+    display: block;
+    width: fit-content;
+}
+
+.button1:hover {
+    background: #22c55e;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(34,197,94,0.3);
+}
+
+.button1:active {
+    transform: scale(0.96);
+}
+
 </style>
 </head>
 
@@ -127,6 +152,8 @@ button {
     <button type="button" onclick="predict()">Tính bit tiếp theo</button>
 
     <div id="result"></div>
+    <div class="button1" onclick="resetAll()">Reset</div>
+
 </div>
 
 <script>
@@ -267,6 +294,24 @@ function loadDefault() {
             console.error("Lỗi load IPFS:", err);
         });
 }
+
+
+function resetAll() {
+    const inputs = inputsDiv.querySelectorAll("input");
+
+    // Xóa 10 ô hiển thị
+    for (let i = 0; i < 10; i++) {
+        inputs[i].value = "";
+    }
+
+    // Xóa kết quả
+    document.getElementById("result").innerText = "";
+
+    // Focus lại ô 11
+    inputs[10].focus();
+}
+
+
 
 // Gọi tự động khi trang load
 window.addEventListener("load", () => {
