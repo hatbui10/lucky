@@ -9,7 +9,22 @@ body {
     font-family: Consolas, monospace;
     background: #020617;
     color: #e5e7eb;
+    display: flex;
+    justify-content: center;   /* vẫn căn giữa ngang */
+    align-items: flex-start;   /* sát mép trên */
+    
+    height: 100vh;
+    margin: 20px;
+}
+
+.container {
+    background: #0f172a;
     padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    text-align: center;
+    min-width: 600px;
+     border: 1px solid #334155;
 }
 
 h3 {
@@ -55,63 +70,121 @@ button:hover {
 }
 
 #result {
-    margin-top: 20px;
-    font-size: 22px;
+    margin-top: 25px;
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-align: center;
+    
     color: #22c55e;
+    
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    padding: 15px 25px;
+    border-radius: 12px;
+    
+    border: 1px solid #334155;
+    
+    box-shadow:
+        0 0 10px rgba(34,197,94,0.4),
+        0 0 25px rgba(34,197,94,0.2),
+        inset 0 0 10px rgba(34,197,94,0.1);
+
+    transition: all 0.3s ease;
 }
+
+#result.active {
+    animation: glow 0.6s ease;
+}
+
+@keyframes glow {
+    0% {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+#fileInput,
+button {
+    display: none;
+}
+
 </style>
 </head>
 
 <body>
 
-<h3>Nhập 10 bit (0 / 1)</h3>
+<div class="container">
+    <h3>Nhập 10 bit (0 / 1)</h3>
 
-<div id="inputs"></div>
+    <div id="inputs"></div>
 
-<input type="file" id="fileInput">
-<br><br>
-<button onclick="predict()">Tính bit tiếp theo</button>
+    <input type="file" id="fileInput">
+    <br><br>
 
-<div id="result"></div>
+    <button type="button" onclick="predict()">Tính bit tiếp theo</button>
+
+    <div id="result"></div>
+</div>
 
 <script>
 const inputsDiv = document.getElementById("inputs");
+let inputCount = 0;
 
-// tạo 10 ô nhập
-for (let i = 0; i < 10; i++) {
+
+
+// tạo 11 ô
+for (let i = 0; i < 11; i++) {
     const inp = document.createElement("input");
     inp.className = "bit";
     inp.maxLength = 1;
-    inp.dataset.index = i;
 
-    inp.addEventListener("input", e => {
-        const v = e.target.value;
-        if (v !== "0" && v !== "1") {
-            e.target.value = "";
-            return;
-        }
-        const next = inputsDiv.querySelector(
-            `input[data-index='${i + 1}']`
-        );
-        if (next) next.focus();
-    });
+    if (i < 10) {
+        inp.readOnly = true; // 10 ô hiển thị
+    } else {
+        // ô thứ 11 để nhập
+        inp.addEventListener("input", function () {
+            const v = this.value;
 
-    inp.addEventListener("keydown", e => {
-        if (e.key === "Backspace" && !inp.value) {
-            const prev = inputsDiv.querySelector(
-                `input[data-index='${i - 1}']`
-            );
-            if (prev) prev.focus();
-        }
-    });
+            if (v !== "0" && v !== "1") {
+                this.value = "";
+                return;
+            }
+
+            const inputs = inputsDiv.querySelectorAll("input");
+
+            // 10 lần đầu: chỉ điền từ trái sang phải
+            if (inputCount < 10) {
+                inputs[inputCount].value = v;
+                inputCount++;
+            } 
+            // từ lần 11 trở đi: shift + predict
+            else {
+                shiftLeft(v);
+                predict();
+            }
+
+            this.value = "";
+        });
+    }
 
     inputsDiv.appendChild(inp);
 }
 
-// focus ô đầu tiên khi load trang
-window.onload = () => {
-    inputsDiv.querySelector("input").focus();
-};
+
+// ===== DỊCH TRÁI =====
+function shiftLeft(newBit) {
+    const inputs = inputsDiv.querySelectorAll("input");
+
+    for (let i = 0; i < 9; i++) {
+        inputs[i].value = inputs[i + 1].value;
+    }
+
+    inputs[9].value = newBit;
+}
+
 
 let historyBits = "";
 
@@ -125,6 +198,8 @@ document.getElementById("fileInput").addEventListener("change", e => {
     reader.readAsText(file);
 });
 
+
+
 function predict() {
     if (historyBits.length < 11) {
         alert("Chưa có dữ liệu lịch sử");
@@ -132,8 +207,9 @@ function predict() {
     }
 
     const inputs = [...inputsDiv.querySelectorAll("input")]
-        .map(i => i.value)
-        .join("");
+    .slice(0, 10)
+    .map(i => i.value)
+    .join("");
 
     if (inputs.length < 10) {
         alert("Chưa nhập đủ 10 bit");
@@ -161,8 +237,46 @@ function predict() {
     }
 
     document.getElementById("result").innerText = text;
-}
-</script>
 
+// 🔥 focus lại ô 11
+    const inputsAll = inputsDiv.querySelectorAll("input");
+    inputsAll[10].focus();
+}
+
+const resultDiv = document.getElementById("result");
+resultDiv.classList.remove("active");
+void resultDiv.offsetWidth; 
+resultDiv.classList.add("active");
+
+
+
+   const DEFAULT_FILE_URL =
+"https://tomato-delicate-zebra-533.mypinata.cloud/ipfs/bafybeidlqhc3nf5ygzssmbmpzalssf3qk3errgudbcgvzvamq5yg3lsjh4";
+
+function loadDefault() {
+    fetch(DEFAULT_FILE_URL)
+        .then(response => {
+            if (!response.ok) throw new Error("Không tải được IPFS");
+            return response.text();
+        })
+        .then(text => {
+            historyBits = text.replace(/[^01]/g, "");
+            console.log("Đã nạp mặc định:", historyBits.length, "bit");
+        })
+        .catch(err => {
+            console.error("Lỗi load IPFS:", err);
+        });
+}
+
+// Gọi tự động khi trang load
+window.addEventListener("load", () => {
+    const inputs = inputsDiv.querySelectorAll("input");
+    inputs[10].focus(); // focus ô thứ 11
+});
+ loadDefault();
+
+</script>
 </body>
 </html>
+
+
