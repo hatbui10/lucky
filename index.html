@@ -411,17 +411,17 @@ function generateMaskAndResult(){
 
 
 
-    let mask = [];
-    let result = [];
-    let usedOperations = [];
-  
+   let mask = [];
+let result = [];
+let usedOperations = [];
 
+const operations = ["xor", "and", "or", "not"];
 
-  const operations = ["xor", "and", "or", "not"];
- 
+let randomOp = operations[Math.floor(Math.random() * operations.length)];
+
 for(let i = 0; i < 5; i++){
 
-   let operation = operations[Math.floor(Math.random() * operations.length)];
+    let operation = randomOp;
 
     usedOperations[i] = operation;
 
@@ -429,9 +429,7 @@ for(let i = 0; i < 5; i++){
     result[i] = applyOperation(B[i], mask[i], operation);
 }
 
-    showResult(mask, result, usedOperations);
-    
-    
+showResult(mask, result, usedOperations);
     
     
     
