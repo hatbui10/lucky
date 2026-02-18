@@ -390,13 +390,12 @@ function generateMaskAndResult(){
     let mask = [];
     let result = [];
 
-    for(let i=0;i<5;i++){
-        // tạo mask XOR
-        mask[i] = A[i] ^ C[i];
+   for(let i=0;i<5;i++){
 
-        // áp mask lên B
-        result[i] = B[i] ^ mask[i];
-    }
+    mask[i] = applyOperation(A[i], C[i], "xor");
+
+    result[i] = applyOperation(B[i], mask[i], "xor");
+}
 
     showResult(mask, result);
     
@@ -409,6 +408,16 @@ function generateMaskAndResult(){
 
 
 
+function applyOperation(a, b, type){
+
+    switch(type){
+        case "xor": return a ^ b;
+        case "and": return a & b;
+        case "or":  return a | b;
+        case "not": return 1 - a;  // chỉ dùng a
+        default: return 0;
+    }
+}
 
 
 
