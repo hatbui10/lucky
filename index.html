@@ -413,15 +413,23 @@ function generateMaskAndResult(){
 
     let mask = [];
     let result = [];
+    let usedOperations = [];
+  
 
-   for(let i=0;i<5;i++){
 
-    mask[i] = applyOperation(A[i], C[i], "xor");
+  const operations = ["xor", "and", "or", "not"];
+ 
+for(let i = 0; i < 5; i++){
 
-    result[i] = applyOperation(B[i], mask[i], "xor");
+   let operation = operations[Math.floor(Math.random() * operations.length)];
+
+    usedOperations[i] = operation;
+
+    mask[i] = applyOperation(A[i], C[i], operation);
+    result[i] = applyOperation(B[i], mask[i], operation);
 }
 
-    showResult(mask, result);
+    showResult(mask, result, usedOperations);
     
     
     
@@ -438,7 +446,8 @@ function applyOperation(a, b, type){
         case "xor": return a ^ b;
         case "and": return a & b;
         case "or":  return a | b;
-        case "not": return 1 - a;  // chỉ dùng a
+        case "not": return a ^ 1;
+        
         default: return 0;
     }
 }
@@ -446,13 +455,17 @@ function applyOperation(a, b, type){
 
 
 
-function showResult(mask, result){
+function showResult(mask, result, ops){
+
 
     const maskDiv = document.getElementById("result");
     const resultDiv = document.getElementById("resultBoxes");
 
     // hiển thị mask dạng chuỗi như trước
-    maskDiv.textContent = "Mask: " + mask.join(" ");
+   maskDiv.textContent =
+    "Mask: " + mask.join(" ") +
+    " | Ops: " + ops.join(" ");
+
 
     // hiển thị result vào 5 ô
     resultDiv.innerHTML = "";
