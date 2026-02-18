@@ -5,95 +5,171 @@
 <title>Dự báo bit 0-1</title>
 
 <style>
-body {
-    font-family: Consolas, monospace;
-    background: #020617;
-    color: #e5e7eb;
-    display: flex;
-    justify-content: center;   /* vẫn căn giữa ngang */
-    align-items: flex-start;   /* sát mép trên */
-    
-    height: 100vh;
-    margin: 20px;
+/* ===== RESET NHẸ ===== */
+* {
+    box-sizing: border-box;
 }
 
+body {
+    font-family: Consolas, monospace;
+    background: radial-gradient(circle at top, #0f172a, #020617);
+    color: #e5e7eb;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px 20px;
+}
+
+/* ===== CONTAINER ===== */
 .container {
     background: #0f172a;
     padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    border-radius: 18px;
+
+    border: 1px solid #1e293b;
+    box-shadow:
+        0 0 40px rgba(0,0,0,0.6),
+        inset 0 0 20px rgba(255,255,255,0.02);
+
+    min-width: 650px;
     text-align: center;
-    min-width: 600px;
-     border: 1px solid #334155;
 }
 
+/* ===== TIÊU ĐỀ ===== */
 h3 {
-    margin-bottom: 12px;
+    margin: 6px 0;
+    font-weight: 500;
+    color: #94a3b8;
 }
 
+/* ===== INPUT KHU VỰC BIT ===== */
 #inputs {
     display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
+    gap: 10px;
+    margin: 20px 0;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
+/* ===== Ô BIT ===== */
 input.bit {
-    width: 48px;
-    height: 56px;
+    width: 52px;
+    height: 60px;
+
     text-align: center;
     font-size: 26px;
+    font-weight: bold;
+
     background: #020617;
-    color: #e5e7eb;
+    color: #22c55e;
+
     border: 2px solid #334155;
-    border-radius: 8px;
+    border-radius: 10px;
+
     outline: none;
-    transition: 0.15s;
+    transition: all 0.2s ease;
 }
 
 input.bit:focus {
     border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.25);
+}
+
+/* ===== INPUT NUMBER ===== */
+#boxCount {
+    width: 90px;
+    padding: 8px;
+
+    font-size: 16px;
+    text-align: center;
+
+    background: #020617;
+    color: #e5e7eb;
+
+    border: 2px solid #334155;
+    border-radius: 8px;
+
+    outline: none;
+    transition: 0.2s ease;
+}
+
+#boxCount:focus {
+    border-color: #22c55e;
     box-shadow: 0 0 0 2px rgba(34,197,94,0.3);
 }
 
+/* Ẩn mũi tên number */
+#boxCount::-webkit-outer-spin-button,
+#boxCount::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#boxCount {
+    -moz-appearance: textfield;
+}
+
+/* ===== BUTTON ===== */
 button {
-    padding: 10px 18px;
-    background: #16a34a;
-    border: none;
-    border-radius: 8px;
+    display: inline-block;
+    padding: 12px 22px;
+
+    background: linear-gradient(135deg, #16a34a, #15803d);
     color: white;
+
+    border: 1px solid #22c55e;
+    border-radius: 10px;
+
     font-size: 16px;
+    font-weight: 600;
+
     cursor: pointer;
+    transition: all 0.2s ease;
+
+    margin: 10px 6px;
+    box-shadow: 0 5px 15px rgba(34,197,94,0.25);
 }
 
 button:hover {
-    background: #22c55e;
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 8px 22px rgba(34,197,94,0.35);
 }
 
+button:active {
+    transform: scale(0.96);
+}
+
+/* ===== RESULT ===== */
 #result {
-    margin-top: 1px;
-    font-size: 26px;
+    margin: 15px auto;   /* auto để căn giữa */
+    width: 60%;          /* rộng 40% */
+
+    font-size: 24px;
     font-weight: bold;
-    letter-spacing: 1px;
-    text-align: center;
-    
+
     color: #22c55e;
-    
+
     background: linear-gradient(135deg, #0f172a, #1e293b);
-    padding: 15px 25px;
-    border-radius: 12px;
-    
+    padding: 18px 28px;
+
+    border-radius: 14px;
     border: 1px solid #334155;
-    
+
     box-shadow:
-        0 0 10px rgba(34,197,94,0.4),
+        0 0 12px rgba(34,197,94,0.4),
         0 0 25px rgba(34,197,94,0.2),
-        inset 0 0 10px rgba(34,197,94,0.1);
+        inset 0 0 10px rgba(34,197,94,0.08);
 
     transition: all 0.3s ease;
 }
 
 #result.active {
-    animation: glow 0.6s ease;
+    animation: glow 0.5s ease;
 }
 
 @keyframes glow {
@@ -106,35 +182,39 @@ button:hover {
         opacity: 1;
     }
 }
-#fileInput,
-button {
-    display: none;
+
+
+
+#resultBoxes {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
 }
 
+.result-bit {
+    width: 52px;
+    height: 60px;
 
-.button1 {
-    padding: 15px 20px;
-    background: #16a34a;
-    border: none;
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+
+    background: #111827;
+    color: #facc15;
+
+    border: 2px solid #334155;
     border-radius: 10px;
-    color: white;
-    font-size: 30px;
-    cursor: pointer;
-    transition: 0.2s ease;
-    margin: 20px auto;
-    display: block;
-    width: fit-content;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 0 12px rgba(250,204,21,0.3);
 }
 
-.button1:hover {
-    background: #22c55e;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(34,197,94,0.3);
-}
 
-.button1:active {
-    transform: scale(0.96);
-}
+
 
 </style>
 </head>
@@ -143,158 +223,232 @@ button {
 
 <div class="container">
    
-    <h3>7- 00111</h3>
-    <h3> 6-76-96-  - 11000</h3>
-    <h3>5 - 11111</h3>
-    <h3> 0 -  *0001</h3>
-    <h3> 1 -  11000</h3>
-    <h3> 2 -  00000</h3>
-     <h3> 3 -  00011</h3>
-    <h3>34,43,04,40, 46--   **111</h3>
-    <h3>9 - **000</h3>
-    <h3>Nhập 10 bit (0 / 1)</h3>
+   
+    <h3>Nhập 15 bit (0 / 1)</h3>
     
     
 
-    <div id="inputs"></div>
-
-    <input type="file" id="fileInput">
-    <br><br>
-
-    <button type="button" onclick="predict()">Tính bit tiếp theo</button>
-
-    <div id="result"></div>
-    <div class="button1" onclick="resetAll()">Reset</div>
-
+  <div>
+    Số ô hiển thị:
+    <input type="number" id="boxCount" value="15" min="1">
+    <button id="applyBtn">Áp dụng</button>
 </div>
+
+<div id="inputs" style="margin-top:20px;"></div>
+<div id="result"></div>
+<div id="resultBoxes"></div>
+
+
 
 <script>
 const inputsDiv = document.getElementById("inputs");
+const applyBtn = document.getElementById("applyBtn");
+
+let displayCount = 15;
 let inputCount = 0;
+let totalEntered = 0;
 
 
+applyBtn.addEventListener("click", init);
 
-// tạo 11 ô
-for (let i = 0; i < 16; i++) {
-    const inp = document.createElement("input");
-    inp.className = "bit";
-    inp.maxLength = 1;
+function init(){
+    
 
-    if (i < 15) {
-        inp.readOnly = true; // 10 ô hiển thị
-    } else {
-        // ô thứ 11 để nhập
-        inp.addEventListener("input", function () {
-            const v = this.value;
+    const value = parseInt(document.getElementById("boxCount").value);
+    totalEntered = 0;
+    if(isNaN(value) || value <= 0){
+        alert("Số ô không hợp lệ");
+        return;
+    }
 
-            if (v !== "0" && v !== "1") {
-                this.value = "";
-                return;
-            }
+    displayCount = value;
+    inputCount = 0;
+    inputsDiv.innerHTML = "";
 
-            const inputs = inputsDiv.querySelectorAll("input");
+    // container dạng grid 5 cột
+    inputsDiv.style.display = "grid";
+    inputsDiv.style.gridTemplateColumns = "repeat(5, auto)";
+    inputsDiv.style.gap = "15px";
+    inputsDiv.style.justifyContent = "center";
 
-            // 10 lần đầu: chỉ điền từ trái sang phải
-            if (inputCount < 10) {
-                inputs[inputCount].value = v;
-                inputCount++;
-            } 
-            // từ lần 11 trở đi: shift + predict
-            else {
-                shiftLeft(v);
-                predict();
-            }
+    for(let i=0;i<displayCount;i++){
 
+        const column = document.createElement("div");
+       
+column.className = "bit-column";   // 👈 thêm dòng này
+
+        column.style.display = "flex";
+        column.style.flexDirection = "column";
+        column.style.alignItems = "center";
+
+        const label = document.createElement("div");
+        label.textContent = i + 1;
+        label.style.marginBottom = "6px";
+        label.style.fontSize = "14px";
+        label.style.color = "#94a3b8";
+
+        const inp = document.createElement("input");
+        inp.className = "bit";
+        inp.readOnly = true;
+
+        column.appendChild(label);
+        column.appendChild(inp);
+        inputsDiv.appendChild(column);
+    }
+
+    // ô nhập riêng (nằm dưới grid)
+    const inputBox = document.createElement("input");
+    inputBox.className = "bit";
+    inputBox.style.gridColumn = "span 5";  // chiếm cả 1 hàng
+    inputBox.style.marginTop = "15px";
+    inputBox.style.justifySelf = "center";
+
+    inputBox.addEventListener("input", function(){
+
+        const v = this.value;
+
+        if(v !== "0" && v !== "1"){
             this.value = "";
-        });
-    }
+            return;
+        }
 
-    inputsDiv.appendChild(inp);
+
+         totalEntered++;   // 👈 thêm dòng này
+        const inputs = inputsDiv.querySelectorAll("input.bit[readonly]");
+
+        if(inputCount < displayCount){
+            inputs[inputCount].value = v;
+            inputCount++;
+            updateLabels();
+
+            if(inputCount === displayCount){
+                generateMaskAndResult();
+            }
+        }else{
+            shiftLeft(v);
+            updateLabels();   // 👈 cập nhật label
+            generateMaskAndResult();
+        }
+
+        this.value = "";
+    });
+
+    inputsDiv.appendChild(inputBox);
+    inputBox.focus();
 }
 
 
-// ===== DỊCH TRÁI =====
-function shiftLeft(newBit) {
-    const inputs = inputsDiv.querySelectorAll("input");
 
-    for (let i = 0; i < 9; i++) {
-        inputs[i].value = inputs[i + 1].value;
+
+
+
+
+
+
+function shiftLeft(newBit){
+
+    const inputs = inputsDiv.querySelectorAll("input.bit[readonly]");
+
+    for(let i=0;i<displayCount-1;i++){
+        inputs[i].value = inputs[i+1].value;
     }
 
-    inputs[9].value = newBit;
+    inputs[displayCount-1].value = newBit;
 }
 
 
-let historyBits = "";
-
-document.getElementById("fileInput").addEventListener("change", e => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-        historyBits = reader.result.replace(/[^01]/g, "");
-        alert("Đã nạp " + historyBits.length + " bit");
-    };
-    reader.readAsText(file);
-});
 
 
 
-function predict() {
-    if (historyBits.length < 11) {
-        alert("Chưa có dữ liệu lịch sử");
+function generateMaskAndResult(){
+
+    if(displayCount < 15){
+        alert("Cần ít nhất 15 ô để so sánh");
         return;
     }
 
-    const inputs = [...inputsDiv.querySelectorAll("input")]
-    .slice(0, 10)
-    .map(i => i.value)
-    .join("");
+    const inputs = inputsDiv.querySelectorAll("input.bit[readonly]");
 
-    if (inputs.length < 10) {
-        alert("Chưa nhập đủ 10 bit");
-        return;
+    let A = [];
+    let B = [];
+    let C = [];
+
+    for(let i=0;i<5;i++){
+        A.push(parseInt(inputs[i].value) || 0);
+        B.push(parseInt(inputs[i+5].value) || 0);
+        C.push(parseInt(inputs[i+10].value) || 0);
     }
 
-  
-
-// 🔥 focus lại ô 11
-    const inputsAll = inputsDiv.querySelectorAll("input");
-    inputsAll[10].focus();
-}
-
-const resultDiv = document.getElementById("result");
-resultDiv.classList.remove("active");
-void resultDiv.offsetWidth; 
-resultDiv.classList.add("active");
 
 
 
-  
 
-function resetAll() {
-    const inputs = inputsDiv.querySelectorAll("input");
 
-    // Xóa 10 ô hiển thị
-    for (let i = 0; i < 10; i++) {
-        inputs[i].value = "";
+
+    let mask = [];
+    let result = [];
+
+    for(let i=0;i<5;i++){
+        // tạo mask XOR
+        mask[i] = A[i] ^ C[i];
+
+        // áp mask lên B
+        result[i] = B[i] ^ mask[i];
     }
 
-    // Xóa kết quả
-    document.getElementById("result").innerText = "";
+    showResult(mask, result);
+    
+    
+    
+    
+    
+    
+} // dấu ngoặc kết thúc hàm generate
 
-    // Focus lại ô 11
-    inputs[10].focus();
+
+
+
+
+
+
+function showResult(mask, result){
+
+    const maskDiv = document.getElementById("result");
+    const resultDiv = document.getElementById("resultBoxes");
+
+    // hiển thị mask dạng chuỗi như trước
+    maskDiv.textContent = "Mask: " + mask.join(" ");
+
+    // hiển thị result vào 5 ô
+    resultDiv.innerHTML = "";
+
+    for(let i=0;i<5;i++){
+        const box = document.createElement("div");
+        box.className = "result-bit";
+        box.textContent = result[i];
+        resultDiv.appendChild(box);
+    }
 }
 
 
 
-// Gọi tự động khi trang load
-window.addEventListener("load", () => {
-    const inputs = inputsDiv.querySelectorAll("input");
-    inputs[10].focus(); // focus ô thứ 11
-});
- loadDefault();
 
+function updateLabels(){
+
+    const columns = inputsDiv.querySelectorAll(".bit-column");
+
+    const start = Math.max(1, totalEntered - displayCount + 1);
+
+    columns.forEach((col, index) => {
+        const label = col.querySelector("div");
+        label.textContent = start + index;
+    });
+}
+
+
+
+// khởi tạo mặc định khi load
+window.addEventListener("load", init);
 </script>
 </body>
 </html>
