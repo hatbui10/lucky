@@ -80,7 +80,8 @@ input.bit:focus {
 }
 
 /* ===== INPUT NUMBER ===== */
-#boxCount {
+#boxCount,
+#startIndex {
     width: 90px;
     padding: 8px;
 
@@ -92,7 +93,7 @@ input.bit:focus {
 
     border: 2px solid #334155;
     border-radius: 8px;
-
+    margin: 10px auto;
     outline: none;
     transition: 0.2s ease;
 }
@@ -120,7 +121,8 @@ button {
 
     background: linear-gradient(135deg, #16a34a, #15803d);
     color: white;
-
+    width: 40%;
+    margin: 10px auto;
     border: 1px solid #22c55e;
     border-radius: 10px;
 
@@ -130,7 +132,7 @@ button {
     cursor: pointer;
     transition: all 0.2s ease;
 
-    margin: 10px 6px;
+   
     box-shadow: 0 5px 15px rgba(34,197,94,0.25);
 }
 
@@ -212,6 +214,12 @@ button:active {
 
     box-shadow: 0 0 12px rgba(250,204,21,0.3);
 }
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+}
 
 
 
@@ -233,12 +241,15 @@ button:active {
 <div id="inputs" style="margin-top:20px;"></div>
 
 
-  <div>
+  <div class="input-group">
     Số ô hiển thị:
     <input type="number" id="boxCount" value="15" min="1">
+
+    Bắt đầu từ:
+    <input type="number" id="startIndex" value="1" min="0">
+
     <button id="applyBtn">Áp dụng</button>
 </div>
-
 
 
 
@@ -249,23 +260,36 @@ const applyBtn = document.getElementById("applyBtn");
 let displayCount = 15;
 let inputCount = 0;
 let totalEntered = 0;
+let baseIndex = 1;
+
 
 
 applyBtn.addEventListener("click", init);
 
 function init(){
-    
+   totalEntered = 0;
 
+    // lấy số ô hiển thị
     const value = parseInt(document.getElementById("boxCount").value);
-    totalEntered = 0;
+
     if(isNaN(value) || value <= 0){
         alert("Số ô không hợp lệ");
         return;
     }
 
     displayCount = value;
+
+    // lấy số bắt đầu
+    const startValue = parseInt(document.getElementById("startIndex").value);
+
+    baseIndex = isNaN(startValue) ? 1 : startValue;
+
     inputCount = 0;
     inputsDiv.innerHTML = "";
+
+
+
+
 
     // container dạng grid 5 cột
     inputsDiv.style.display = "grid";
@@ -448,7 +472,7 @@ function updateLabels(){
 
     const columns = inputsDiv.querySelectorAll(".bit-column");
 
-    const start = Math.max(1, totalEntered - displayCount + 1);
+    const start = baseIndex + Math.max(0, totalEntered - displayCount);
 
     columns.forEach((col, index) => {
         const label = col.querySelector("div");
