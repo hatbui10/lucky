@@ -175,12 +175,12 @@ let inputCount = 0;
 
 
 // tạo 11 ô
-for (let i = 0; i < 11; i++) {
+for (let i = 0; i < 16; i++) {
     const inp = document.createElement("input");
     inp.className = "bit";
     inp.maxLength = 1;
 
-    if (i < 10) {
+    if (i < 15) {
         inp.readOnly = true; // 10 ô hiển thị
     } else {
         // ô thứ 11 để nhập
@@ -255,27 +255,7 @@ function predict() {
         return;
     }
 
-    let count0 = 0;
-    let count1 = 0;
-
-    for (let i = 0; i <= historyBits.length - 11; i++) {
-        if (historyBits.substr(i, 10) === inputs) {
-            const nextBit = historyBits[i + 10];
-            if (nextBit === "0") count0++;
-            else count1++;
-        }
-    }
-
-    let text;
-    if (count0 === 0 && count1 === 0) {
-        text = "Không có mẫu trùng trong lịch sử";
-    } else if (count1 > count0) {
-        text = `→ Đề xuất: 1  (1:${count1} | 0:${count0})`;
-    } else {
-        text = `→ Đề xuất: 0  (0:${count0} | 1:${count1})`;
-    }
-
-    document.getElementById("result").innerText = text;
+  
 
 // 🔥 focus lại ô 11
     const inputsAll = inputsDiv.querySelectorAll("input");
@@ -289,24 +269,7 @@ resultDiv.classList.add("active");
 
 
 
-   const DEFAULT_FILE_URL =
-"    https://tomato-delicate-zebra-533.mypinata.cloud/ipfs/bafybeih3p2hg63ysjgg6zitazpp6p3fcadv2lqm2fvwlhjnrzhosiiwnka";
-
-function loadDefault() {
-    fetch(DEFAULT_FILE_URL)
-        .then(response => {
-            if (!response.ok) throw new Error("Không tải được IPFS");
-            return response.text();
-        })
-        .then(text => {
-            historyBits = text.replace(/[^01]/g, "");
-            console.log("Đã nạp mặc định:", historyBits.length, "bit");
-        })
-        .catch(err => {
-            console.error("Lỗi load IPFS:", err);
-        });
-}
-
+  
 
 function resetAll() {
     const inputs = inputsDiv.querySelectorAll("input");
@@ -335,6 +298,7 @@ window.addEventListener("load", () => {
 </script>
 </body>
 </html>
+
 
 
 
