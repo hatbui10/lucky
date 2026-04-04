@@ -1,178 +1,195 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lọc & Phân lớp số</title>
-
-<style>
-:root {
-  --radius: 12px;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #0f172a;
-  color: #e5e7eb;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-.container {
-  width: 95%;
-  max-width: 600px;
-  background: #111827;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-}
-
-h2 {
-  text-align: center;
-}
-
-
-input[type="text"] {
-  width: 100%;
-  height: 45px;
-  margin-top: 10px;
-  border-radius: var(--radius);
-  border: 1px solid #374151;
-  background: #1f2937;
-  color: #fff;
-  text-align: center;
-}
-
-button {
-  width: 100%;
-  height: 45px;
-  margin-top: 10px;
-  border-radius: var(--radius);
-  border: none;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover {
-  transform: scale(1.03);
-}
-
-textarea {
-  width: 100%;
-  height: 280px;
-  margin-top: 15px;
-  border-radius: var(--radius);
-  border: 1px solid #374151;
-  background: #1f2937;
-  color: #fff;
-  padding: 10px;
-  font-family: monospace;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-  <h2>🔢 Lọc & phân lớp số</h2>
-
-  <input type="file" id="fileInput">
-
-  <input type="text" id="filterInput" placeholder="(Tuỳ chọn) Lọc số bắt đầu bằng..." />
-
-  <button onclick="processFile()">🔍 Xử lý</button>
-  <button onclick="copyResult()">📋 Copy</button>
-  <button onclick="downloadFile()">⬇️ Xuất file</button>
-
-  <textarea id="output" placeholder="Kết quả sẽ hiển thị ở đây..."></textarea>
-</div>
-
-<script>
-let finalText = "";
-
-function processFile() {
-  const file = document.getElementById("fileInput").files[0];
-  const filterValue = document.getElementById("filterInput").value.trim();
-
-  if (!file) {
-    alert("Chưa chọn file 😐");
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = function(event) {
-    const text = event.target.result;
-
-    // Lấy tất cả số
-    let numbers = text.match(/\d+/g) || [];
-
-    // Lọc nếu có nhập
-    if (filterValue !== "") {
-      numbers = numbers.filter(num => num.startsWith(filterValue));
-    }
-
-    // Sort chuẩn số
-    numbers.sort((a, b) => Number(a) - Number(b));
-
-    // Tạo nhóm 0-9
-    let groups = {};
-    for (let i = 0; i <= 9; i++) {
-      groups[i] = [];
-    }
-
-    // Phân lớp
-    numbers.forEach(num => {
-      const first = num[0];
-      groups[first].push(num);
-    });
-
-    // Tạo output
-    let result = [];
-
-    for (let i = 0; i <= 9; i++) {
-      if (groups[i].length > 0) {
-        result.push(`--- Lớp ${i} (${groups[i].length} số) ---`);
-
-        for (let j = 0; j < groups[i].length; j += 5) {
-          result.push(groups[i].slice(j, j + 5).join(", "));
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon File Merger Pro</title>
+    <style>
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff00ff;
+            --bg-dark: #0a0b10;
         }
 
-        result.push("");
-      }
-    }
+        body {
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
 
-    finalText = result.join("\n");
-    document.getElementById("output").value = finalText;
-  };
+        /* Glassmorphism Container */
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+        }
 
-  reader.readAsText(file);
-}
+        h1 {
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px var(--neon-cyan);
+            margin-bottom: 30px;
+        }
 
-function copyResult() {
-  const text = document.getElementById("output");
-  text.select();
-  document.execCommand("copy");
-  alert("Đã copy 😎");
-}
+        .upload-area {
+            border: 2px dashed var(--neon-pink);
+            padding: 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
 
-function downloadFile() {
-  const blob = new Blob([finalText], { type: "text/plain" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "ketqua.txt";
-  a.click();
-}
-</script>
+        .upload-area:hover {
+            box-shadow: 0 0 15px var(--neon-pink);
+            background: rgba(255, 0, 255, 0.05);
+        }
 
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-merge {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .btn-export {
+            background: var(--neon-pink);
+            color: #fff;
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        button:disabled {
+            filter: grayscale(1);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #status {
+            margin-top: 15px;
+            color: #00ffaa;
+            font-size: 0.9em;
+        }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #00f3ff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            resize: none;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Data Scanner Merger</h1>
+        
+        <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+            <p>Nhấp để chọn 23 file hoặc kéo thả vào đây</p>
+            <input type="file" id="fileInput" multiple accept=".txt" style="display:none">
+        </div>
+
+        <div id="status">Chưa có file nào được chọn</div>
+
+        <div class="btn-group">
+            <button class="btn-merge" id="mergeBtn">Nối & Lọc Dữ Liệu</button>
+            <button class="btn-export" id="exportBtn" disabled>Xuất File .TXT</button>
+        </div>
+
+        <textarea id="preview" placeholder="Nội dung sau khi nối sẽ hiển thị ở đây..."></textarea>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const status = document.getElementById('status');
+        const mergeBtn = document.getElementById('mergeBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const preview = document.getElementById('preview');
+
+        let mergedContent = "";
+
+        fileInput.addEventListener('change', () => {
+            const fileCount = fileInput.files.length;
+            status.innerText = fileCount > 0 ? `Đã chọn ${fileCount} file.` : "Chưa có file nào được chọn";
+        });
+
+        mergeBtn.addEventListener('click', async () => {
+            const files = fileInput.files;
+            if (files.length === 0) return alert("Vui lòng chọn file trước!");
+
+            let allData = [];
+            
+            for (let file of files) {
+                const text = await file.text();
+                // Tách thành các dòng/số dựa trên khoảng trắng hoặc xuống dòng
+                const lines = text.split(/[\s,]+/);
+                allData = allData.concat(lines);
+            }
+
+            // Logic xử lý dữ liệu đặc thù
+            // 1. Loại bỏ trùng lặp
+            // 2. Lọc các chuỗi ít hơn 10 số
+            const filteredData = [...new Set(allData)].filter(item => {
+                const cleanItem = item.trim();
+                return cleanItem.length >= 10 && !isNaN(cleanItem);
+            });
+
+            mergedContent = filteredData.join('\n');
+            preview.value = mergedContent;
+            
+            if (mergedContent) {
+                exportBtn.disabled = false;
+                status.innerText = `Nối thành công! Đã lọc còn ${filteredData.length} mục hợp lệ.`;
+            }
+        });
+
+        exportBtn.addEventListener('click', () => {
+            if (!mergedContent) return;
+
+            const blob = new Blob([mergedContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Merged_Data_${new Date().getTime()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
 </body>
 </html>
