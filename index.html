@@ -177,19 +177,27 @@
             }
         });
 
-        exportBtn.addEventListener('click', () => {
+                exportBtn.addEventListener('click', () => {
             if (!mergedContent) return;
+
+            // Tạo 4 số ngẫu nhiên để tên file ngắn gọn
+            const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+            const fileName = `file nối ${randomSuffix}.txt`;
 
             const blob = new Blob([mergedContent], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
+            
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Merged_Data_${new Date().getTime()}.txt`;
+            a.download = fileName; // Tên file mới: file nối XXXX.txt
             document.body.appendChild(a);
             a.click();
+            
+            // Dọn dẹp bộ nhớ
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         });
+
     </script>
 </body>
 </html>
